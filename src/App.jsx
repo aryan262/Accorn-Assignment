@@ -6,15 +6,17 @@ import Advertisement from './components/Advertisement'
 
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState(null)
 
   return (
       <div className="mx-auto min-h-screen bg-white rounded-lg shadow-lg ">
-        <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <div className="flex gap-4 p-4">
-          <Sidebar />
-          <Popular />
-          <div className="w-72">
+        <Navbar setSearchResults={setSearchResults} />
+        <div className="flex flex-col lg:flex-row gap-4 p-4">
+          <div className="hidden lg:block">
+            <Sidebar />
+          </div>
+          <Popular searchResults={searchResults} />
+          <div className="hidden lg:block w-72">
             <Advertisement />
           </div>
         </div>
