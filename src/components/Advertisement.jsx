@@ -1,4 +1,5 @@
 import React from 'react'
+import { FaReddit } from 'react-icons/fa'
 
 function Advertisement() {
   return (
@@ -12,7 +13,8 @@ function Advertisement() {
         </div>
       </div>
       <div className="bg-white p-4 text-center">
-        <img src="/placeholder.svg?height=40&width=40" alt="Reddit" className="w-10 h-10 mx-auto mb-2" />
+        {/* <img src="/placeholder.svg?height=40&width=40" alt="Reddit" className="w-10 h-10 mx-auto mb-2" /> */}
+        <FaReddit className="text-reddit-orange text-3xl w-10 h-10 mx-auto mb-2" />
         <h3 className="font-medium mb-2">Advertise on Reddit</h3>
         <button className="w-full px-4 py-2 bg-[#FF4500] text-white rounded-full hover:bg-[#FF4500]/90">
           GET STARTED
