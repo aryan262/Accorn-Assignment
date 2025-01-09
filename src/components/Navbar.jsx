@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { SunIcon, HomeIcon, TrendingUpIcon as TrendUpIcon, GridIcon, SearchIcon, BellIcon, InboxIcon as EnvelopeIcon } from 'lucide-react'
 import debounce from 'lodash/debounce'
+import { FaReddit } from 'react-icons/fa'
 
 export default function Navbar({ setSearchResults }) {
   const [isSearching, setIsSearching] = useState(false)
@@ -37,7 +38,7 @@ export default function Navbar({ setSearchResults }) {
     <nav className="flex flex-wrap items-center gap-4 p-2 border-b">
       <SunIcon className="w-6 h-6" />
       <div className="flex items-center gap-2">
-        <img src="/placeholder.svg?height=32&width=32" alt="Reddit Logo" className="h-8" />
+        <FaReddit className="text-reddit-orange text-3xl" />
         <span className="text-xl font-semibold">reddit</span>
       </div>
       
