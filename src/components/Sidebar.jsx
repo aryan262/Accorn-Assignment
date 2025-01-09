@@ -9,7 +9,7 @@ function Sidebar() {
     ]
 
     const redditFeeds = [
-        { name: 'r/moview', count: 4, avatar: '/placeholder.svg?height=32&width=32' },
+        { name: 'r/movies', count: 4, avatar: '/placeholder.svg?height=32&width=32' },
         { name: 'r/gaming', count: 0, avatar: '/placeholder.svg?height=32&width=32' },
         { name: 'r/pics', count: 32, avatar: '/placeholder.svg?height=32&width=32' },
         { name: 'r/gifs', count: 0, avatar: '/placeholder.svg?height=32&width=32' },

@@ -9,7 +9,6 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
 
   return (
-    // <div className="min-h-screen bg-[#FF7F7F]">
       <div className="mx-auto min-h-screen bg-white rounded-lg shadow-lg ">
         <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="flex gap-4 p-4">
@@ -20,7 +19,6 @@ function App() {
           </div>
         </div>
       </div>
-    // </div>
   )
 }
 

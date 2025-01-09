@@ -4,6 +4,7 @@ function Popular() {
     const [posts, setPosts] = useState([])
     const [sort, setSort] = useState('hot')
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
     const [after, setAfter] = useState(null)
 
     useEffect(() => {
@@ -13,6 +14,8 @@ function Popular() {
     const fetchPosts = async (loadMore = false) => {
         if (loading) return
         setLoading(true)
+        setError(null)
+
         try {
             const url = new URL(`https://www.reddit.com/r/popular/${sort}/.json`)
             url.searchParams.append('limit', '5')
@@ -24,6 +27,10 @@ function Popular() {
             }
 
             const response = await fetch(url)
+            if (!response.ok) {
+                throw new Error('Failed to fetch posts')
+            }
+
             const data = await response.json()
 
             if (loadMore) {
@@ -33,9 +40,37 @@ function Popular() {
             }
             setAfter(data.data.after)
         } catch (error) {
+            setError('Failed to load posts. Please try again later.')
             console.error('Error fetching posts:', error)
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
+    }
+
+    const searchPosts = async (query) => {
+        if (!query) return
+        setLoading(true)
+        setError(null)
+
+        try {
+            const url = new URL('https://www.reddit.com/search.json')
+            url.searchParams.append('q', query)
+            url.searchParams.append('limit', '5')
+
+            const response = await fetch(url)
+            if (!response.ok) {
+                throw new Error('Search request failed')
+            }
+
+            const data = await response.json()
+            setPosts(data.data.children)
+            setAfter(data.data.after)
+        } catch (error) {
+            setError('Search failed. Please try again later.')
+            console.error('Search error:', error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const formatNumber = (num) => {
@@ -62,6 +97,18 @@ function Popular() {
                 </div>
             </div>
 
+            {error && (
+                <div className="p-4 mb-4 bg-red-50 text-red-600 rounded-lg">
+                    {error}
+                </div>
+            )}
+
+            {loading && (
+                <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                </div>
+            )}
+
             <div className="space-y-4">
                 {posts.map((post) => (
                     <div key={post.data.id} className="flex gap-4 p-4 border rounded-lg">
@@ -86,60 +133,31 @@ function Popular() {
                                 <span>Posted by u/{post.data.author}</span>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center gap-2">
-                            <div className="flex flex-col items-center">
-                                <button className="p-1 hover:bg-gray-100 rounded">
-                                    <ChevronUpIcon className="w-5 h-5" />
-                                </button>
-                                <span className="text-sm font-medium">{formatNumber(post.data.score)}</span>
-                                <button className="p-1 hover:bg-gray-100 rounded">
-                                    <ChevronDownIcon className="w-5 h-5" />
-                                </button>
-                            </div>
-                            <div className="flex gap-2">
-                                <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
-                                    <MessageSquareIcon className="w-4 h-4" />
-                                    <span className="text-sm">{formatNumber(post.data.num_comments)}</span>
-                                </button>
-                                <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
-                                    <ShareIcon className="w-4 h-4" />
-                                </button>
-                                <button className="p-1 hover:bg-gray-100 rounded text-gray-500">
-                                    <MoreHorizontalIcon className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
 
-                        {/* <div className="flex flex-col items-center gap-2">
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronUpIcon className="w-5 h-5" />
-                </button>
-                <span className="text-sm font-medium">{formatNumber(post.data.score)}</span>
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronDownIcon className="w-5 h-5" />
-                </button>
-                <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
-                  <MessageSquareIcon className="w-4 h-4" />
-                  <span className="text-sm">{formatNumber(post.data.num_comments)}</span>
-                </button>
-                <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
-                  <ShareIcon className="w-4 h-4" />
-                </button>
-                <button className="p-1 hover:bg-gray-100 rounded text-gray-500">
-                  <MoreHorizontalIcon className="w-4 h-4" />
-                </button>
-              </div> */}
+                        <div className="flex flex-col items-center gap-2">
+                            <button className="p-1 hover:bg-gray-100 rounded">
+                                <ChevronUpIcon className="w-5 h-5" />
+                            </button>
+                            <span className="text-sm font-medium">{formatNumber(post.data.score)}</span>
+                            <button className="p-1 hover:bg-gray-100 rounded">
+                                <ChevronDownIcon className="w-5 h-5" />
+                            </button>
+                            <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
+                                <MessageSquareIcon className="w-4 h-4" />
+                                <span className="text-sm">{formatNumber(post.data.num_comments)}</span>
+                            </button>
+                            <button className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded text-gray-500">
+                                <ShareIcon className="w-4 h-4" />
+                            </button>
+                            <button className="p-1 hover:bg-gray-100 rounded text-gray-500">
+                                <MoreHorizontalIcon className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {loading && (
-                <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                </div>
-            )}
-
-            {!loading && after && (
+            {!loading && !error && after && (
                 <div className="flex justify-center mt-4">
                     <button
                         className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
